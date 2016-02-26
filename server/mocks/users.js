@@ -5,7 +5,7 @@ module.exports = function(app) {
 
    // Use the body-parser library in this service
   var bodyParser = require('body-parser');
-  app.use(bodyParser.json({ type: 'application/*+json' }))
+  app.use(bodyParser.json())
 
   // Create an embedded table using NEDB if it doesn't yet exist
   var nedb = require('nedb');
@@ -36,9 +36,11 @@ module.exports = function(app) {
   });
 
   usersRouter.get('/', function(req, res) {
-    res.send({
-      'users': []
-    });
+    userDB.find(req.query).exec(function(error,users) {
+      res.send({
+        'users': users
+      });
+    })
   });
 
   usersRouter.post('/', function(req, res) {
